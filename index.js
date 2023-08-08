@@ -50,9 +50,9 @@ app.get("/campgrounds/:id/edit", async (req, res) => {
   res.render("campgrounds/edit", { campground: campID });
 });
 
-app.put("/campgrounds/:id/edit", async (req, res) => {
+app.put("/campgrounds/:id", async (req, res) => {
   const { id } = req.params;
-  const updatedCampground = await Campground.findByIdAndUpdate(id, req.body, {new: true, runValidators: true});
+  const updatedCampground = await Campground.findByIdAndUpdate(id, {...req.body.campground}, {new: true, runValidators: true});
   res.redirect(`/campgrounds/${updatedCampground.id}`);
 });
  
