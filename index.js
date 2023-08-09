@@ -52,10 +52,20 @@ app.get("/campgrounds/:id/edit", async (req, res) => {
 
 app.put("/campgrounds/:id", async (req, res) => {
   const { id } = req.params;
-  const updatedCampground = await Campground.findByIdAndUpdate(id, {...req.body.campground}, {new: true, runValidators: true});
+  const updatedCampground = await Campground.findByIdAndUpdate(
+    id,
+    { ...req.body.campground },
+    { new: true, runValidators: true }
+  );
   res.redirect(`/campgrounds/${updatedCampground.id}`);
 });
- 
+
+app.delete("/campgrounds/:id", async (req, res) => {
+  const { id } = req.params;
+  await Campground.findByIdAndDelete(id);
+  res.redirect("/campgrounds");
+});
+
 app.listen(3000, () => {
   console.log("LISTENING TO PORT 3000");
 });
