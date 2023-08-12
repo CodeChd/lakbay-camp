@@ -1,9 +1,22 @@
 <!-- POSSIBLE WITH EJS MATE -->
 <%- layout('layouts/boilerplate') %>
-<h1>Campgrounds</h1>
-<ul>
-  <% campgrounds.forEach(data => { %>
-  <li><a href="/campgrounds/<%= data.id %>"><%= data.title %></a></li>
-  <% }) %>
-</ul>
-<br />
+<h1>All Campgrounds</h1>
+<% campgrounds.forEach(data => { %>
+<div class="card mb-3">
+  <div class="row">
+    <div class="col-md-4">
+      <img class="img-fluid" src="<%= data.image %>" alt="" />
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title"><%= data.title %></h5>
+        <p class="card-text"><%=data.description %></p>
+        <p class="card-text">
+          <small class=""><%= data.location %></small>
+        </p>
+        <a href="/campgrounds/<%= data.id %>" class="btn btn-primary">View <%= data.title %></a>
+      </div>
+    </div>
+  </div>
+</div>
+<% }) %>

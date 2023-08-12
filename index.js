@@ -29,6 +29,7 @@ app.get("/", (req, res) => {
 
 app.get("/campgrounds", async (req, res) => {
   const campgrounds = await Campground.find({});
+  console.log(campgrounds)
   res.render("campgrounds/index", { campgrounds });
 });
 app.get("/campgrounds/new", async (req, res) => {
@@ -36,7 +37,7 @@ app.get("/campgrounds/new", async (req, res) => {
 });
 
 app.post("/campgrounds", async (req, res) => {
-  const campground = await new Campground(req.body.campground);
+  const campground = new Campground(req.body.campground);
   await campground.save();
   res.redirect(`/campgrounds/${campground.id}`);
 });
