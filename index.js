@@ -22,14 +22,14 @@ app.set("views", path.join(__dirname, "content"));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
-
+ 
 app.get("/", (req, res) => {
   res.render("home");
 });
 
 app.get("/campgrounds", async (req, res) => {
   const campgrounds = await Campground.find({});
-  console.log(campgrounds)
+  // console.log(campgrounds)
   res.render("campgrounds/index", { campgrounds });
 });
 app.get("/campgrounds/new", async (req, res) => {
