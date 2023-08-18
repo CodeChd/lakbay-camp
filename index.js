@@ -3,11 +3,13 @@ const app = express();
 const path = require("path");
 const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
+//reusable
 const {campgroundSchema} = require('./schema')
 
 
-//Custom Error Class
 const ErrorAsync = require("./utils/ErrorAsync");
+
+//Custom Error Class
 const ExpressError = require("./utils/ExpressError");
 
 const Campground = require("./models/Campground");
@@ -28,7 +30,6 @@ app.set("views", path.join(__dirname, "content"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
-//reusable
 const validateCampground = (req, res, next) => {
   //serverside validation
   const { error } = campgroundSchema.validate(req.body);

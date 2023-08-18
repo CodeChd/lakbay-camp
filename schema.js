@@ -1,5 +1,6 @@
 const joi = require("joi");
 
+//input must only contain strings
 const pattern = /^[^\d]*$/;
 
 module.exports.campgroundSchema = joi.object({
