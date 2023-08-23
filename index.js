@@ -3,9 +3,9 @@ const app = express();
 const path = require("path");
 const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
+const Reviews = require("./models/review");
 //reusable
-const {campgroundSchema} = require('./schema')
-
+const { campgroundSchema, reviewSchema } = require("./schema");
 
 const ErrorAsync = require("./utils/ErrorAsync");
 
@@ -33,6 +33,17 @@ app.use(methodOverride("_method"));
 const validateCampground = (req, res, next) => {
   //serverside validation
   const { error } = campgroundSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((e) => e.message).join("");
+    console.log(msg);
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
+
+const validateReviews = (req, res, next) => {
+  const { error } = reviewSchema.validate(req.body);
   if (error) {
     const msg = error.details.map((e) => e.message).join("");
     console.log(msg);
@@ -76,7 +87,7 @@ app.get(
   "/campgrounds/:id",
   ErrorAsync(async (req, res) => {
     const { id } = req.params;
-    const campID = await Campground.findById(id);
+    const campID = await Campground.findById(id).populate("reviews");
     res.render("campgrounds/show", { campground: campID });
   })
 );
@@ -110,6 +121,34 @@ app.delete(
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
     res.redirect("/campgrounds");
+  })
+);
+
+//
+app.post(
+  "/campgrounds/:id/reviews",
+  validateReviews,
+  ErrorAsync(async (req, res) => {
+    const campground = await Campground.findById(req.params.id);
+    const review = new Reviews(req.body.review);
+    campground.reviews.push(review);
+    await review.save();
+    await campground.save();
+    res.redirect(`/campgrounds/${req.params.id}`);
+
+  })
+);
+
+
+//
+app.delete(
+  "/campgrounds/:id/reviews/:reviewId",
+  ErrorAsync(async (req, res) => {
+    await Campground.findByIdAndUpdate(req.params.id, {
+      $pull: { reviews: req.params.reviewId },
+    });
+    await Reviews.findByIdAndDelete(req.params.reviewId);
+    res.redirect(`/campgrounds/${req.params.id}`);
   })
 );
 
